@@ -181,8 +181,9 @@ class AvtDataset(BaseDataset):
 
         self.focal = focal
         self.imgs = imgs
-        self.train_idxs = [1,2]
-        self.val_idxs = [4]
+        idx = [i for i in range(len(imgs))]
+        self.val_idxs = idx[::10]
+        self.train_idxs = [i for i in idx if i not in self.val_idxs]
 
         poses = poses[:,:3,:] # (N_images, 3, 4) cam2world matrices
         self.poses = poses
@@ -199,7 +200,6 @@ class AvtDataset(BaseDataset):
             self.all_rgbs = []
             self.all_masks = []
             self.all_masks_valid = []
-            count = 0            
             for i, image_path in enumerate(imgs):
                 if i not in self.train_idxs: # exclude the val images
                     continue
